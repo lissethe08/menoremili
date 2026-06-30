@@ -1,112 +1,92 @@
-const kitty=document.getElementById("kitty");
-const points=document.getElementById("points");
-const game=document.getElementById("game");
+const kitty = document.getElementById("kitty");
+const points = document.getElementById("points");
+const game = document.getElementById("game");
 
-let score=0;
-let jumping=false;
+let score = 0;
+let jumping = false;
+let gameOver = false;
 
-document.addEventListener("click",jump);
+document.addEventListener("click", jump);
 
-function jump(){
+function jump() {
+    if (jumping || gameOver) return;
 
-if(jumping)return;
+    jumping = true;
+    kitty.style.bottom = "150px";
 
-jumping=true;
+    setTimeout(() => {
+        kitty.style.bottom = "20px";
+        jumping = false;
+    }, 500);
+}
 
-kitty.style.bottom="150px";
+function createStrawberry() {
 
-setTimeout(()=>{
+    if (gameOver) return;
 
-kitty.style.bottom="0px";
+    const strawberry = document.createElement("img");
+    strawberry.src = "img/fresa.png";
+    strawberry.className = "strawberry";
 
-jumping=false;
+    strawberry.style.left = "820px";
+    strawberry.style.bottom = (60 + Math.random() * 220) + "px";
 
-},450);
+    game.appendChild(strawberry);
+
+    let x = 820;
+
+    const move = setInterval(() => {
+
+        x -= 4;
+        strawberry.style.left = x + "px";
+
+        const k = kitty.getBoundingClientRect();
+        const s = strawberry.getBoundingClientRect();
+
+        if (
+            k.left < s.right &&
+            k.right > s.left &&
+            k.top < s.bottom &&
+            k.bottom > s.top
+        ) {
+
+            score++;
+            points.textContent = score;
+
+            strawberry.remove();
+            clearInterval(move);
+
+            if (score >= 100) {
+                win();
+            }
+
+        }
+
+        if (x < -60) {
+            strawberry.remove();
+            clearInterval(move);
+        }
+
+    }, 20);
 
 }
 
-function createStrawberry(){
+setInterval(createStrawberry, 1800);
 
-let strawberry=document.createElement("img");
+function win() {
 
-strawberry.src="img/fresa.png";
+    gameOver = true;
 
-strawberry.className="strawberry";
+    document.querySelectorAll(".strawberry").forEach(f => f.remove());
 
-strawberry.style.left="850px";
+    const house = document.createElement("img");
+    house.src = "img/casa.png";
+    house.className = "house";
+    game.appendChild(house);
 
-strawberry.style.bottom=Math.floor(Math.random()*350)+"px";
-
-game.appendChild(strawberry);
-
-let x=850;
-
-let move=setInterval(()=>{
-
-x-=5;
-
-strawberry.style.left=x+"px";
-
-let kittyRect=kitty.getBoundingClientRect();
-let fruitRect=strawberry.getBoundingClientRect();
-
-if(
-kittyRect.left<fruitRect.right &&
-kittyRect.right>fruitRect.left &&
-kittyRect.top<fruitRect.bottom &&
-kittyRect.bottom>fruitRect.top
-){
-
-score++;
-
-points.innerHTML=score;
-
-strawberry.remove();
-
-clearInterval(move);
-
-if(score>=100){
-
-win();
-
-}
-
-}
-
-if(x<-50){
-
-strawberry.remove();
-
-clearInterval(move);
-
-}
-
-},20);
-
-}
-
-setInterval(createStrawberry,1800);
-
-function win(){
-
-clearInterval();
-
-let house=document.createElement("img");
-
-house.src="img/casa.png";
-
-house.className="house";
-
-game.appendChild(house);
-
-let text=document.createElement("div");
-
-text.id="message";
-
-text.innerHTML="🎉 ¡Felicidades Emi! ❤️";
-
-text.style.display="block";
-
-game.appendChild(text);
+    const message = document.createElement("div");
+    message.className = "winMessage";
+    message.innerHTML = "🎉 ¡Felicidades Emi! ❤️";
+    game.appendChild(message);
 
 }
