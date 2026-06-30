@@ -1,83 +1,109 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+const kitty = document.getElementById("kitty");
+const points = document.getElementById("points");
+const game = document.getElementById("game");
+
+let score = 0;
+let jumping = false;
+let gameOver = false;
+
+document.addEventListener("click", jump);
+
+function jump() {
+
+    if (jumping || gameOver) return;
+
+    jumping = true;
+    kitty.style.bottom = "150px";
+
+    setTimeout(() => {
+        kitty.style.bottom = "20px";
+        jumping = false;
+    }, 450);
+
 }
 
-body{
-    background:#ffd6e7;
-    font-family:Arial,sans-serif;
-    text-align:center;
+function createStrawberry(){
+
+    if(gameOver) return;
+
+    const strawberry=document.createElement("img");
+
+    strawberry.src="img/fresa.png";
+    strawberry.className="strawberry";
+
+    strawberry.style.left="820px";
+
+    // SIEMPRE EN EL SUELO
+    strawberry.style.bottom="20px";
+
+    game.appendChild(strawberry);
+
+    let x=820;
+
+    const move=setInterval(()=>{
+
+        x-=8;
+
+        strawberry.style.left=x+"px";
+
+        const k=kitty.getBoundingClientRect();
+        const s=strawberry.getBoundingClientRect();
+
+        if(
+            k.left<s.right &&
+            k.right>s.left &&
+            k.top<s.bottom &&
+            k.bottom>s.top
+        ){
+
+            score++;
+
+            points.textContent=score;
+
+            strawberry.remove();
+
+            clearInterval(move);
+
+            if(score>=100){
+                win();
+            }
+
+        }
+
+        if(x<-60){
+
+            strawberry.remove();
+
+            clearInterval(move);
+
+        }
+
+    },20);
+
 }
 
-h1{
-    color:#ff3d7f;
-    margin:20px;
-}
+setInterval(createStrawberry,900);
 
-#game{
-    position:relative;
-    width:800px;
-    height:400px;
-    margin:auto;
-    overflow:hidden;
-    border:5px solid white;
-    border-radius:20px;
-    background:url("img/fondo.png") center center;
-    background-size:cover;
-}
+function win(){
 
-#score{
-    position:absolute;
-    top:15px;
-    right:15px;
-    background:white;
-    padding:8px 15px;
-    border-radius:15px;
-    font-weight:bold;
-    z-index:100;
-}
+    gameOver=true;
 
-#kitty{
-    position:absolute;
-    width:70px;
-    height:70px;
-    left:20px;
-    bottom:20px;
-    image-rendering:pixelated;
-    transition:bottom .45s;
-}
+    document.querySelectorAll(".strawberry").forEach(f=>f.remove());
 
-.strawberry{
-    position:absolute;
-    width:40px;
-    height:40px;
-    image-rendering:pixelated;
-}
+    const house=document.createElement("img");
 
-.house{
-    position:absolute;
-    width:150px;
-    height:150px;
-    right:15px;
-    bottom:10px;
-    image-rendering:pixelated;
-}
+    house.src="img/casa.png";
 
-.winMessage{
-    position:absolute;
-    width:100%;
-    top:130px;
-    left:0;
-    text-align:center;
-    font-size:42px;
-    color:#ff1744;
-    font-weight:bold;
-    text-shadow:2px 2px white;
-}
+    house.className="house";
 
-p{
-    margin-top:15px;
-    font-size:20px;
-    color:#444;
+    game.appendChild(house);
+
+    const message=document.createElement("div");
+
+    message.className="winMessage";
+
+    message.innerHTML="🎉 ¡Felicidades Emi! ❤️";
+
+    game.appendChild(message);
+
 }
