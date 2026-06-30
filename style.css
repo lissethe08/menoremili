@@ -5,26 +5,47 @@
 }
 
 body{
-    background:#ffd6ec;
-    font-family:Arial, Helvetica, sans-serif;
+    background:#ffd6e7;
+    font-family:Arial, sans-serif;
     text-align:center;
 }
 
 h1{
+    color:#ff3d7f;
     margin:20px;
-    color:#ff1493;
 }
 
 #game{
-    width:900px;
-    height:500px;
+    position:relative;
+    width:800px;
+    height:400px;
     margin:auto;
+    overflow:hidden;
     border:5px solid white;
     border-radius:20px;
     background:url("img/fondo.png");
     background-size:cover;
-    position:relative;
-    overflow:hidden;
+}
+
+#kitty{
+    position:absolute;
+    width:70px;
+    left:40px;
+    bottom:20px;
+}
+
+#fresa{
+    position:absolute;
+    width:40px;
+    right:120px;
+    top:180px;
+}
+
+#casa{
+    position:absolute;
+    width:120px;
+    right:10px;
+    bottom:10px;
 }
 
 #score{
@@ -32,43 +53,16 @@ h1{
     top:15px;
     right:15px;
     background:white;
-    padding:10px;
-    border-radius:10px;
-    font-size:22px;
+    padding:8px 15px;
+    border-radius:15px;
     font-weight:bold;
 }
 
-#kitty{
-    width:80px;
+#mensaje{
     position:absolute;
-    left:80px;
-    bottom:0;
-    transition:0.3s;
-}
-
-.strawberry{
-    width:45px;
-    position:absolute;
-}
-
-.house{
-    width:140px;
-    position:absolute;
-    bottom:0;
-    right:10px;
-}
-
-#message{
-    position:absolute;
-    top:40%;
     width:100%;
+    top:150px;
     font-size:40px;
-    color:#ff1493;
-    display:none;
+    color:red;
     font-weight:bold;
-}
-
-p{
-    margin-top:20px;
-    font-size:20px;
 }
