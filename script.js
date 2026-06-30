@@ -1,43 +1,44 @@
 const kitty = document.getElementById("kitty");
-const points = document.getElementById("points");
 const game = document.getElementById("game");
+const points = document.getElementById("points");
 
 let score = 0;
 let jumping = false;
-let gameOver = false;
+let gameFinished = false;
 
 document.addEventListener("click", jump);
+document.addEventListener("touchstart", jump);
 
 function jump() {
-    if (jumping || gameOver) return;
+    if (jumping || gameFinished) return;
 
     jumping = true;
-    kitty.style.bottom = "150px";
+    kitty.style.bottom = "140px";
 
     setTimeout(() => {
         kitty.style.bottom = "20px";
         jumping = false;
-    }, 500);
+    }, 450);
 }
 
 function createStrawberry() {
 
-    if (gameOver) return;
+    if (gameFinished) return;
 
     const strawberry = document.createElement("img");
     strawberry.src = "img/fresa.png";
     strawberry.className = "strawberry";
 
-    strawberry.style.left = "820px";
-    strawberry.style.bottom = (60 + Math.random() * 220) + "px";
+    strawberry.style.left = "800px";
+    strawberry.style.bottom = "20px";
 
     game.appendChild(strawberry);
 
-    let x = 820;
+    let x = 800;
 
     const move = setInterval(() => {
 
-        x -= 4;
+        x -= 7;
         strawberry.style.left = x + "px";
 
         const k = kitty.getBoundingClientRect();
@@ -49,7 +50,6 @@ function createStrawberry() {
             k.top < s.bottom &&
             k.bottom > s.top
         ) {
-
             score++;
             points.textContent = score;
 
@@ -57,36 +57,33 @@ function createStrawberry() {
             clearInterval(move);
 
             if (score >= 100) {
-                win();
+                finishGame();
             }
-
         }
 
-        if (x < -60) {
+        if (x < -50) {
             strawberry.remove();
             clearInterval(move);
         }
 
     }, 20);
-
 }
 
-setInterval(createStrawberry, 1800);
+setInterval(createStrawberry, 900);
 
-function win() {
+function finishGame() {
 
-    gameOver = true;
-
-    document.querySelectorAll(".strawberry").forEach(f => f.remove());
+    gameFinished = true;
 
     const house = document.createElement("img");
     house.src = "img/casa.png";
     house.className = "house";
     game.appendChild(house);
 
+    kitty.style.left = "620px";
+
     const message = document.createElement("div");
-    message.className = "winMessage";
+    message.id = "message";
     message.innerHTML = "🎉 ¡Felicidades Emi! ❤️";
     game.appendChild(message);
-
 }
